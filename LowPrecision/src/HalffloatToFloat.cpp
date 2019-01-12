@@ -1,0 +1,203 @@
+/**
+ * @infi
+ * float16 (unsigned short) and float transform function
+ */
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+#define _XINLINE_ inline
+#define TEST 1
+
+/*
+ * Half-precision constants
+ */
+
+#define NPY_HALF_ZERO   (0x0000u)
+#define NPY_HALF_PZERO  (0x0000u)
+#define NPY_HALF_NZERO  (0x8000u)
+#define NPY_HALF_ONE    (0x3c00u)
+#define NPY_HALF_NEGONE (0xbc00u)
+#define NPY_HALF_PINF   (0x7c00u)
+#define NPY_HALF_NINF   (0xfc00u)
+#define NPY_HALF_NAN    (0x7e00u)
+
+#define NPY_MAX_HALF    (0x7bffu)
+
+/*
+ * Bit-level conversions
+ */
+unsigned short FloatbitsToHalfbits(float ff)
+{
+    unsigned int f = *((unsigned int*)&ff);
+    unsigned int f_exp, f_sig;
+    unsigned short h_sgn, h_exp, h_sig;
+
+    h_sgn = (unsigned short) ((f&0x80000000u) >> 16);
+    f_exp = (f&0x7f800000u);
+
+    /* Exponent overflow/NaN converts to signed inf/NaN */
+    if (f_exp >= 0x47800000u) {
+        if (f_exp == 0x7f800000u) {
+            /* Inf or NaN */
+            f_sig = (f&0x007fffffu);
+            if (f_sig != 0) {
+                /* NaN - propagate the flag in the significand... */
+                unsigned short ret = (unsigned short) (0x7c00u + (f_sig >> 13));
+                /* ...but make sure it stays a NaN */
+                if (ret == 0x7c00u) {
+                    ret++;
+                }
+                return h_sgn + ret;
+            } else {
+                /* signed inf */
+                return (unsigned short) (h_sgn + 0x7c00u);
+            }
+        } else {
+            /* overflow to signed inf */
+            return (unsigned short) (h_sgn + 0x7c00u);
+        }
+    }
+
+    /* Exponent underflow converts to a subnormal half or signed zero */
+    if (f_exp <= 0x38000000u) {
+        /*
+         * Signed zeros, subnormal floats, and floats with small
+         * exponents all convert to signed zero half-floats.
+         */
+        if (f_exp < 0x33000000u) {
+            /* If f != 0, it underflowed to 0 */
+            return h_sgn;
+        }
+        /* Make the subnormal significand */
+        f_exp >>= 23;
+        f_sig = (0x00800000u + (f&0x007fffffu));
+
+        f_sig >>= (113 - f_exp);
+        /* Handle rounding by adding 1 to the bit beyond half precision */
+
+        /*
+         * If the last bit in the half significand is 0 (already even), and
+         * the remaining bit pattern is 1000...0, then we do not add one
+         * to the bit after the half significand.  In all other cases, we do.
+         */
+        if ((f_sig&0x00003fffu) != 0x00001000u) {
+            f_sig += 0x00001000u;
+        }
+
+        h_sig = (unsigned short) (f_sig >> 13);
+        /*
+         * If the rounding causes a bit to spill into h_exp, it will
+         * increment h_exp from zero to one and h_sig will be zero.
+         * This is the correct result.
+         */
+        return (unsigned short) (h_sgn + h_sig);
+    }
+
+    /* Regular case with no overflow or underflow */
+    h_exp = (unsigned short) ((f_exp - 0x38000000u) >> 13);
+    /* Handle rounding by adding 1 to the bit beyond half precision */
+    f_sig = (f&0x007fffffu);
+
+    /*
+     * If the last bit in the half significand is 0 (already even), and
+     * the remaining bit pattern is 1000...0, then we do not add one
+     * to the bit after the half significand.  In all other cases, we do.
+     */
+    if ((f_sig&0x00003fffu) != 0x00001000u) {
+        f_sig += 0x00001000u;
+    }
+
+    h_sig = (unsigned short) (f_sig >> 13);
+    /*
+     * If the rounding causes a bit to spill into h_exp, it will
+     * increment h_exp by one and h_sig will be zero.  This is the
+     * correct result.  h_exp may increment to 15, at greatest, in
+     * which case the result overflows to a signed inf.
+     */
+
+    h_sig += h_exp;
+    return h_sgn + h_sig;
+}
+
+float HalfbitsToFloatbits(unsigned short h)
+{
+    unsigned short h_exp, h_sig;
+    unsigned int f_sgn, f_exp, f_sig;
+    unsigned int ret = 0;
+
+    h_exp = (h&0x7c00u);
+    f_sgn = ((unsigned int)h&0x8000u) << 16;
+    switch (h_exp) {
+        case 0x0000u: /* 0 or subnormal */
+            h_sig = (h&0x03ffu);
+            /* Signed zero */
+            if (h_sig == 0) {
+                return f_sgn;
+            }
+            /* Subnormal */
+            h_sig <<= 1;
+            while ((h_sig&0x0400u) == 0) {
+                h_sig <<= 1;
+                h_exp++;
+            }
+            f_exp = ((unsigned int)(127 - 15 - h_exp)) << 23;
+            f_sig = ((unsigned int)(h_sig&0x03ffu)) << 13;
+            ret = f_sgn + f_exp + f_sig;
+            break;
+        case 0x7c00u: /* inf or NaN */
+            /* All-ones exponent and a copy of the significand */
+            ret = f_sgn + 0x7f800000u + (((unsigned int)(h&0x03ffu)) << 13);
+            break;
+        default: /* normalized */
+            /* Just need to adjust the exponent and shift */
+            ret = f_sgn + (((unsigned int)(h&0x7fffu) + 0x1c000u) << 13);
+            break;
+    }
+    return *((float*)&ret);
+}
+
+/* float16 -> float */
+_XINLINE_ float Float16ToFloat(unsigned short h)
+{
+    float f = float(((h&0x8000)<<16) | (((h&0x7c00)+0x1C000)<<13) | ((h&0x03FF)<<13));
+    float ret = HalfbitsToFloatbits(h);
+#if TEST
+    std::cout << std::bitset<32>(*((unsigned int*)&ret)) << std::endl;
+#endif
+    return ret;
+}
+
+/* float -> float16 */
+_XINLINE_ unsigned short FloatToFloat16(float f)
+{
+    unsigned short ret = FloatbitsToHalfbits(f);
+#if TEST
+    std::cout << std::bitset<16>(*((unsigned short*)&ret)) << std::endl;
+#endif
+    return ret;
+}
+
+
+void test (float a) {
+
+    cout<< "origin:" << a << endl;
+    std::cout << std::bitset<32>(*((unsigned int*)&a)) << std::endl;
+    unsigned short b = FloatToFloat16(a);
+    a = Float16ToFloat(b);
+    cout << a << endl;
+}
+
+int main()
+{
+    float a = 111111111111;
+    test(a);
+    a = 0.25;
+    test(a);
+    a = 0;
+    test(a);
+    a = -111111111111111;
+    test(a);
+    return 0;
+}
+
