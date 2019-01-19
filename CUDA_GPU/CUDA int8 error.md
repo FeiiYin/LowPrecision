@@ -6,7 +6,7 @@ number9指向的是 a的参数类型
 下面是封装的int8 tensor乘法实例
 耗时6小时
 
-···C
+```C
   if (dataTypeA == X_INT8 && dataTypeB == X_INT8 && dataTypeC == X_INT) {
         //ShowNTErrors("TO DO!");
         int alpha2 = (int)alpha;
@@ -30,4 +30,4 @@ number9指向的是 a的参数类型
         else if (transposedA == X_TRANS && transposedB == X_TRANS)
             cublasGemmEx(*handle, CUBLAS_OP_T, CUBLAS_OP_T, mc, nc, na, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
     }
-···
+```
