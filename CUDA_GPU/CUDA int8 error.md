@@ -21,13 +21,13 @@ number9指向的是 a的参数类型
 			return;
 		}
 
-    if (transposedA == X_NOTRANS && transposedB == X_NOTRANS) 
-			cublasGemmEx(*handle, CUBLAS_OP_N, CUBLAS_OP_N, mc, nc, ma, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
-		else if (transposedA == X_TRANS && transposedB == X_NOTRANS)
-            cublasGemmEx(*handle, CUBLAS_OP_N, CUBLAS_OP_T, mc, nc, na, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
+	if (transposedA == X_NOTRANS && transposedB == X_NOTRANS) 
+		cublasGemmEx(*handle, CUBLAS_OP_N, CUBLAS_OP_N, mc, nc, ma, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
+	else if (transposedA == X_TRANS && transposedB == X_NOTRANS)
+        	cublasGemmEx(*handle, CUBLAS_OP_N, CUBLAS_OP_T, mc, nc, na, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
         else if (transposedA == X_NOTRANS && transposedB == X_TRANS)
-            cublasGemmEx(*handle, CUBLAS_OP_T, CUBLAS_OP_N, mc, nc, ma, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
+        	cublasGemmEx(*handle, CUBLAS_OP_T, CUBLAS_OP_N, mc, nc, ma, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
         else if (transposedA == X_TRANS && transposedB == X_TRANS)
-            cublasGemmEx(*handle, CUBLAS_OP_T, CUBLAS_OP_T, mc, nc, na, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
+        	cublasGemmEx(*handle, CUBLAS_OP_T, CUBLAS_OP_T, mc, nc, na, &alpha2, (const int8_t*)b, CUDA_R_8I, mb, (const int8_t*)a, CUDA_R_8I, ma, &beta2, (int*)c, CUDA_R_32I, mc, CUDA_R_32I, CUBLAS_GEMM_DEFAULT);
     }
 ```
