@@ -1,9 +1,13 @@
 ## CUDA int8 细节
 -------------------
 CUDA里的int8要求计算（还是Computation type == CUDA_R_32I的时候）时向量维度必须是4的倍数，em。。
+
 否则报错： ** On entry to GEMM_EX  parameter number 9 had an illegal value
+
 number9指向的是 a的参数类型
+
 下面是封装的int8 tensor乘法实例
+
 耗时6小时
 
 ```C
