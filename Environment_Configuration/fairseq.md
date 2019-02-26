@@ -24,7 +24,7 @@
 
 + 创建 `conda create -n fairseq python=3.6`  fairseq为名称
 
-+ 进入虚拟环境 `conda activate fairseq`
++ 进入虚拟环境 `conda activate fairseq`, 不进就装在整个环境里了 = =
 
 #### 查看CUDA版本
 
@@ -35,6 +35,9 @@
 + 卸载之前的 `conda uninstall pytorch`
 
 + 安装 `conda install pytorch=1.0.0 cuda90 -c pytorch`
+
++ 安装中出现网络问题，跟换下载目标为清华镜像 
+  `conda install pytorch=1.0.0 cuda90 -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch`
 
 #### `CXXABI_1.3.8` not found 
 
@@ -55,3 +58,23 @@
 + `ln -s libstdc++.so.6.0.24 libstdc++.so.6`  新建新符号连接
 
 注：`.so`文件是链接文件，类似于路径，在虚拟环境中像快捷方式一样
+
+#### conda 速度慢问题
+
++ 将清华镜像添加到默认channel中， 无需每次都输入网址
+
++ `conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/`
+
++ `conda config --set show_channel_urls yes`
+
+#### fairseq 其余环境配置
+
+`
+  conda install gcc numpy cudnn nccl
+  
+  conda install magma-cuda80 -c soumith
+  pip install cmake
+  pip install cffi
+`
+
+
