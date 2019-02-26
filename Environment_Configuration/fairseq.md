@@ -69,12 +69,11 @@
 
 #### fairseq 其余环境配置
 
-`
+```
   conda install gcc numpy cudnn nccl
-  
   conda install magma-cuda80 -c soumith
   pip install cmake
   pip install cffi
-`
+```
 
 
