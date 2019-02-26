@@ -75,5 +75,67 @@
   pip install cmake
   pip install cffi
 ```
++ 安装fairseq-py
 
+```
+pip install -r requirements.txt
+python setup.py build
+python setup.py develop
+```
 
+#### 模型运行
+
+参考文章：https://ptorch.com/news/58.html
+
++ 快速开始
+
+* python preprocess.py：数据预处理：构建词汇和二值化培训数据
+
+* python train.py：在一个或多个GPU上训练新的模型
+
+* python generate.py：用训练有素的模型翻译预处理的数据
+
+* python generate.py -i：用训练有素的模型翻译原始文本
+
+* python score.py：BLEU生成的翻译与参考翻译的得分
+
++ 预先训练模型载入
+
+参考文章:https://github.com/pytorch/fairseq/blob/master/examples/translation/README.md
+
+```
+$ mkdir -p data-bin
+$ curl https://dl.fbaipublicfiles.com/fairseq/models/wmt14.v2.en-fr.fconv-py.tar.bz2 | tar xvjf - -C data-bin
+$ curl https://dl.fbaipublicfiles.com/fairseq/data/wmt14.v2.en-fr.newstest2014.tar.bz2 | tar xvjf - -C data-bin
+$ fairseq-generate data-bin/wmt14.en-fr.newstest2014  \
+  --path data-bin/wmt14.en-fr.fconv-py/model.pt \
+  --beam 5 --batch-size 128 --remove-bpe | tee /tmp/gen.out
+...
+| Translated 3003 sentences (96311 tokens) in 166.0s (580.04 tokens/s)
+| Generate test with beam=5: BLEU4 = 40.83, 67.5/46.9/34.4/25.5 (BP=1.000, ratio=1.006, syslen=83262, reflen=82787)
+
+# Compute BLEU score
+$ grep ^H /tmp/gen.out | cut -f3- > /tmp/gen.out.sys
+$ grep ^T /tmp/gen.out | cut -f2- > /tmp/gen.out.ref
+$ fairseq-score --sys /tmp/gen.out.sys --ref /tmp/gen.out.ref
+BLEU4 = 40.83, 67.5/46.9/34.4/25.5 (BP=1.000, ratio=1.006, syslen=83262, reflen=82787)
+```
+
+或者
+
+```
+$ curl https://s3.amazonaws.com/fairseq-py/models/wmt14.en-fr.fconv-py.tar.bz2 | tar xvjf - -C data-bin
+$ curl https://s3.amazonaws.com/fairseq-py/data/wmt14.en-fr.newstest2014.tar.bz2 | tar xvjf - -C data-bin
+$ python generate.py data-bin/wmt14.en-fr.newstest2014  \
+  --path data-bin/wmt14.en-fr.fconv-py/model.pt \
+  --beam 5 --batch-size 128 --remove-bpe | tee /tmp/gen.out
+...
+| Translated 3003 sentences (95451 tokens) in 81.3s (1174.33 tokens/s)
+| Generate test with beam=5: BLEU4 = 40.23, 67.5/46.4/33.8/25.0 (BP=0.997, ratio=1.003, syslen=80963, reflen=81194)
+
+# Scoring with score.py:
+$ grep ^H /tmp/gen.out | cut -f3- > /tmp/gen.out.sys
+$ grep ^T /tmp/gen.out | cut -f2- > /tmp/gen.out.ref
+$ python score.py --sys /tmp/gen.out.sys --ref /tmp/gen.out.ref
+BLEU4 = 40.23, 67.5/46.4/33.8/25.0 (BP=0.997, ratio=1.003, syslen=80963, reflen=81194)
+```
