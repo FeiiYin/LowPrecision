@@ -56,3 +56,47 @@ fairseq/fairseq_cli/generate.py ： hypos = task.inference_step(generator, model
                 
             line 50
 ```
+
+problems：
+
++ File "/home/linye/YinFei/fairseq/fairseq/models/fairseq_decoder.py", line 29, in simulation_softmax
+  
+  if output[now_dim][now_len] > now_dim_max:
+  
+  RuntimeError: bool value of Tensor with more than one value is ambiguous
+    
+  语句歧义：未解决  
+
++ expected type torch.LongTensor but got torch.cuda.LongTensor
+
+  参考文章： https://www.aiuai.cn/aifarm606.html 
+  
+  参考文章：https://blog.csdn.net/qq_38410428/article/details/82973711
+  
+  解决：torch.tensor-> torch.tensor.cuda() -> cuda 类型
+  
+  尝试添加：.cuda().data.cpu().numpy()
+  
++ File "/home/linye/YinFei/fairseq/fairseq/sequence_generator.py", line 327, in generate
+  
+  scores = scores.type_as(lprobs)
+
+  TypeError: type_as(): argument 'other' (position 1) must be Tensor, not numpy.ndarray
+
+  尝试添加：.cuda().data.cpu()
+  
+  尝试添加： torch.from_numpy(output.cuda().data.cpu().numpy())
+  
++ File "/home/linye/YinFei/fairseq/fairseq/models/fairseq_decoder.py", line 45, in simulation_softmax
+
+  return torch.from_numpy(output.cuda().data.cpu().numpy())
+
+  RuntimeError: CUDA error: out of memory
+
+  猜测调用了cuda不能再使用--cpu指令
+  
++ 总结解决：
+
+  --cpu 直接return output即可
+  
+  --gpu 需要使用转化运算
