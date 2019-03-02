@@ -44,11 +44,11 @@ fairseq-generate --cpu  data-bin/2/wmt14.en-de.newstest2014 \
 ```
 
 #### 测试结果
-Model | Origin BLUES | Now BLUES | Percent
----|---|---|---
-CNN - WMT14 English-French | 40.83 | 40.08 | 98.163%
-CNN - WMT14 English-German | 25.70 | 24.80 | 96.498%
-Transformer - WMT14 English-French | 43.00 | 42.26 | 98.279%
-Transformer - WMT16 English-German | 29.23 | 28.68 | 98.118%
+Model | Origin BLUES | Now BLUES | Percent | Nom Before Softmax
+---|---|---|---|---
+CNN - WMT14 English-French | 40.83 | 40.08 | 98.163% | 40.09
+CNN - WMT14 English-German | 25.70 | 24.80 | 96.498% | 24.81
+Transformer - WMT14 English-French | 43.00 | 42.26 | 98.279% | 42.29
+Transformer - WMT16 English-German | 29.23 | 28.68 | 98.118% | 28.69 
 
 
