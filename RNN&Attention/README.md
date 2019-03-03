@@ -2,6 +2,10 @@
 
 在一个基于RNN和Attention机制 Sequence to Sequence 的翻译模型上修改 
 
+原模型网址：http://pytorch.org/tutorials/intermediate/seq2seq_translation_tutirial.html
+
+翻译的python文件，为origin.py / Translation.py ， 数据为 eng-fra.txt
+
 修改了decoder中输出的分类器 
  
 decoder的输出会影响到训练的反向过程 
@@ -16,7 +20,7 @@ loss图像前后收敛过程相近
  
 测试BLUE值结果：          初始：32.83                           修改后：33.04 
 
-由于数据太少，该数据不足以太让人信服
+由于数据太少，该数据不具有说服力
 
 训练及样例输出
 
