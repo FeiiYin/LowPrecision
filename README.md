@@ -9,26 +9,16 @@
 
 目录 | 内容
 ---|---
-
-+ /BLUE |                     测试BLUE值的python脚本
-
-+ /LinerSoftmax |             基于Neu.Tensor项目，在FNNLM的语言模型上实验低精度分类器的源码
-
-+ /LowPrecision/src |	        编写CPU环境下半精度（float16）与其他精度单位的转换与计算源码
-
-+ /NN/src |	                  FNNLM源码
-
-+ /Note |	                    初期笔记，gpu低精度编程问题记录
-
-+ /NumberVerification/src |	  MINST识别源码
-
-+ /RNN&Attention |	          基于一个RNN&Attention的seq2seq翻译模型上测试低精度decoder的源码
-
-+ /fairseq_work |	            基于facebook的fairseq项目翻译模型上测试低精度decoder的源码
-
-+ /paper |                    相关论文
-
-+ presentation.pdf |          汇报
+/BLUE |                     测试BLUE值的python脚本
+/LinerSoftmax |             基于Neu.Tensor项目，在FNNLM的语言模型上实验低精度分类器的源码
+/LowPrecision/src |	        编写CPU环境下半精度（float16）与其他精度单位的转换与计算源码
+/NN/src |	                  FNNLM源码
+/Note |	                    初期笔记，gpu低精度编程问题记录
+/NumberVerification/src |	  MINST识别源码
+/RNN&Attention |	          基于一个RNN&Attention的seq2seq翻译模型上测试低精度decoder的源码
+/fairseq_work |	            基于facebook的fairseq项目翻译模型上测试低精度decoder的源码
+/paper |                    相关论文
+presentation.pdf |          汇报
 
 ---
 
