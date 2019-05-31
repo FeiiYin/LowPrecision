@@ -10,7 +10,7 @@ Attempted to replace the float32 units commonly used in the neural network with 
 
 Catalog | Content
 ---|---
-/BLUE |                     Python script for testing BLUE values
+/BLEU |                     Python script for testing BLEU values
 /LinerSoftmax |             Based on Neu. Tensor project, the source code of low-precision classifier experimented on FNNLM language model.
 /LowPrecision/src |	        Write the conversion and calculation between semi-precision (float16) and other precision units in CPU environment
 /NN/src |	                  Source code of FNNLM
