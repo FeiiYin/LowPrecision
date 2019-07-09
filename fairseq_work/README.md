@@ -27,9 +27,17 @@ Transformer <br> ([Ott et al., 2018](https://arxiv.org/abs/1806.00187)) | [WMT16
 
 
 #### 测试结果
-Model | Origin BLUES | Now BLUES | Percent | Nom Before Softmax
+Model | Origin BLEUS | Now BLEUS | Percent | Nom Before Softmax
 ---|---|---|---|---
 CNN - WMT14 English-French | 40.83 | 40.08 | 98.163% | 40.09
 CNN - WMT14 English-German | 25.70 | 24.80 | 96.498% | 24.81
 Transformer - WMT14 English-French | 43.00 | 42.26 | 98.279% | 42.29
 Transformer - WMT16 English-German | 29.23 | 28.68 | 98.118% | 28.69 
+
+#### 测试结果
+Model | Origin BLEUS | Now BLEUS
+---|---|---
+CNN - WMT14 English-French | 40.83 | 40.08
+CNN - WMT14 English-German | 25.70 | 24.80
+Transformer - WMT14 English-French | 43.00 | 42.26
+Transformer - WMT16 English-German | 29.23 | 28.68
